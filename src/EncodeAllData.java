@@ -19,42 +19,44 @@ public class EncodeAllData {
             out.writeObject(key);
         }
 
-        Runnable addDataToList = () -> {
+//        Runnable addDataToList = () -> {
             try (Scanner reading = new Scanner(inputFile)) {
                 while (reading.hasNext()) {
                     String line = reading.nextLine();
+                    System.out.println(line);
                     list.addDataToList(line);
                 }
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-        };
-        // 2 wątki
-        new Thread(addDataToList).start();
-        new Thread(addDataToList).start();
 
-        Runnable encodeDataInMyList = () -> {
-            DataAndIndex dataAndIndex = list.takeFirstDecoded();
-            ByteArrayInputStream in = new ByteArrayInputStream(dataAndIndex.getData().getBytes());
-            ByteArrayOutputStream out = new ByteArrayOutputStream(dataAndIndex.getData().getBytes().length);
-            try {
-                encrypt(in, out);
-            } catch (IOException | GeneralSecurityException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            list.saveEncodedData(new DataAndIndex(out.toString(), dataAndIndex.getArrayIndex()));
-        };
-        // 1 wątki
-        new Thread(encodeDataInMyList).start();
-
-//        Runnable ptintList = () -> {
-////            System.out.println("Data: " + list.getData().stream() + "status: " + list.getStatus().stream() );
-//            System.out.println("Data: " + Arrays.toString(list.getData().toArray()) + "status: " + Arrays.toString(list.getStatus().toArray()) );
 //        };
+////         1 watek
+//        new Thread(addDataToList).start();
 
-        // 1 wątek
-//        new Thread(ptintList).start();
+        while (!list.checkIfAllDataAreEncoded()) {
+            Runnable encodeDataInMyList = () ->{
+
+                DataAndIndex dataAndIndex = list.takeFirstDecoded();
+                ByteArrayInputStream in = new ByteArrayInputStream(dataAndIndex.getData().getBytes());
+                ByteArrayOutputStream out = new ByteArrayOutputStream(dataAndIndex.getData().getBytes().length);
+                try {
+                    encrypt(in, out);
+                } catch (IOException | GeneralSecurityException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+                list.saveEncodedData(new DataAndIndex(out.toString(), dataAndIndex.getArrayIndex()));
+                System.out.println(" ");
+                list.print();
+            };
+            // 1 wątki
+            new Thread(encodeDataInMyList).start();
+//            System.out.println(" ");
+//            list.print();
+
+        }
     }
 
     private static void encrypt(InputStream in, ByteArrayOutputStream out) throws IOException, ClassNotFoundException, GeneralSecurityException {

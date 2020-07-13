@@ -6,14 +6,14 @@ public class MySynchronizedList {
     List<String> data = new ArrayList<>();
     List<Status> status = new ArrayList<>();
 
-     void addDataToList(String inputData){
+    void addDataToList(String inputData) {
         synchronized (MySynchronizedList.class) {
             data.add(inputData);
             status.add(Status.DECOCED);
         }
     }
 
-     DataAndIndex takeFirstDecoded() {
+    DataAndIndex takeFirstDecoded() {
         synchronized (MySynchronizedList.class) {
             String firstDecodecodData = "";
             int index = 0;
@@ -29,7 +29,7 @@ public class MySynchronizedList {
         }
     }
 
-     void saveEncodedData(DataAndIndex dataAndIndex) {
+    void saveEncodedData(DataAndIndex dataAndIndex) {
         synchronized (MySynchronizedList.class) {
             int index = dataAndIndex.getArrayIndex();
             data.set(index, dataAndIndex.getData());
@@ -37,11 +37,11 @@ public class MySynchronizedList {
         }
     }
 
-    private boolean checkIfAllDataAreEncoded() {
+    boolean checkIfAllDataAreEncoded() {
         boolean flag = true;
 
         for (int i = 0; i < status.size(); i++) {
-            if (status.get(i) != Status.ENCODED) {
+            if (status.get(i) == Status.DECOCED) {
                 flag = false;
                 break;
             }
@@ -49,12 +49,13 @@ public class MySynchronizedList {
         return flag;
     }
 
-    public List<String> getData() {
-        return data;
-    }
+    void print() {
+        int x = data.size();
+        for (int i = 0; i < data.size(); i++
+        ) {
+            System.out.println("Data: " + data.get(i) + " Status: " +status.get(i));
+        }
 
-    public List<Status> getStatus() {
-        return status;
     }
 }
 
