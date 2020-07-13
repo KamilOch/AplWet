@@ -19,21 +19,15 @@ public class EncodeAllData {
             out.writeObject(key);
         }
 
-//        Runnable addDataToList = () -> {
             try (Scanner reading = new Scanner(inputFile)) {
                 while (reading.hasNext()) {
                     String line = reading.nextLine();
                     System.out.println(line);
                     list.addDataToList(line);
                 }
-
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-
-//        };
-////         1 watek
-//        new Thread(addDataToList).start();
 
         while (!list.checkIfAllDataAreEncoded()) {
             Runnable encodeDataInMyList = () ->{
@@ -53,10 +47,8 @@ public class EncodeAllData {
             };
             // 1 wątki
             new Thread(encodeDataInMyList).start();
-//            System.out.println(" ");
-//            list.print();
-
         }
+
     }
 
     private static void encrypt(InputStream in, ByteArrayOutputStream out) throws IOException, ClassNotFoundException, GeneralSecurityException {
